@@ -63,6 +63,8 @@ public class Main {
 	
 	static int time = 0;//현재 시간
 	
+	static StringBuilder sb = new StringBuilder();
+	
 	private static void init(int l) {
 		L=l;
 		belt = new HashMap<>();
@@ -154,7 +156,8 @@ public class Main {
 		
 		turn(t);
 		
-		System.out.println(guestCnt+" "+totalSusiCnt);
+//		System.out.println(guestCnt+" "+totalSusiCnt);
+		sb.append(guestCnt).append(" ").append(totalSusiCnt).append("\n");
 	}
 	
 
@@ -311,6 +314,7 @@ public class Main {
 			}
 		}
 		
+		System.out.println(sb.toString());
 	}
 
 

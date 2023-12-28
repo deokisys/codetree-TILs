@@ -5,7 +5,9 @@ import java.io.*;
 //2:33 그냥 구현 4:10
 
 //테케1통과 4:50
+//테케전부통과5:31
 
+//turn을 개선하기
 
 public class Main {
 	
@@ -49,6 +51,11 @@ public class Main {
 			this.chair = chair;
 			this.eat = eat;
 		}
+		@Override
+		public String toString() {
+			return "Guest [name=" + name + ", chair=" + chair + ", eat=" + eat + "]";
+		}
+		
 	}
 	
 	static int totalSusiCnt;//전체 초밥 갯수
@@ -68,10 +75,10 @@ public class Main {
 	
 	private static int makeChairNum(int t, int x) {
 		int result = x-(t-1);
+		result%=L;
 		if(result<0) {
 			//-result만큼 왼쪽으로 이동해야한다.
 			//%로 줄인다.
-			result%=L;
 			result+=L;
 		}
 		return result;
@@ -153,11 +160,16 @@ public class Main {
 
 
 
+	//초밥은 한바퀴만 돌면 다 먹을 수 잇다!
+		//그러면 어디에서 도착하는지가 중요하다.
+	
 	private static void turn(int t) {
 		//기존time부터 해서 t까지 회전을 진행
 		//모든 사람을 돈다.
-		
 		int gap = t-time;
+		
+		int turnGap = Math.min(gap, L);
+		gap%=L;
 		for(String name : guests.keySet()) {
 			Guest g = guests.get(name);
 			if(g.eat==0) continue;
@@ -166,6 +178,54 @@ public class Main {
 			
 			
 			//다음 자리부터 보면 된다.
+			//여기서 시간 초과네
+			
+			//한바퀴를 돌거나, 적은 수만큼만 돈다.
+			for(int i=1;i<=turnGap;i++) {
+				if(g.eat==0) {
+					break;
+				}
+				moveChair -= 1;
+				if(moveChair<0) {
+					moveChair = L-1;
+				}
+				if(!belt.get(g.name).containsKey(moveChair)) continue;
+				
+				//해당 벨트의 초밥 갯수
+				eat(name,moveChair);
+				
+				
+			}
+			
+			
+			//위에서 돈만큼 이동한다.
+			
+			g.chair-=gap;
+			if(g.chair<0) {
+				g.chair+=L;
+			}
+		}
+		
+		time = t;
+		
+//		System.out.println("무야호"+totalSusiCnt);
+	}
+	
+	private static void turn_to(int t) {
+		//기존time부터 해서 t까지 회전을 진행
+		//모든 사람을 돈다.
+		
+		int gap = t-time;
+		for(String name : guests.keySet()) {
+			Guest g = guests.get(name);
+			System.out.println("이동전"+g.chair);
+			if(g.eat==0) continue;
+			
+			int moveChair = g.chair;//현재 앉은 자리
+			
+			
+			//다음 자리부터 보면 된다.
+			//여기서 시간 초과네
 			for(int i=1;i<=gap;i++) {
 				moveChair -= 1;
 				if(moveChair<0) {
@@ -181,6 +241,7 @@ public class Main {
 					break;
 				}
 			}
+			System.out.println("이동후"+g.chair);
 		}
 		
 		time = t;
@@ -195,6 +256,7 @@ public class Main {
 		// 해당 벨트에 name으로 
 		if(!belt.containsKey(name)) return;
 		if(!belt.get(name).containsKey(chair)) return; 
+		if(g.eat==0) return;
 		
 		int susiCount = belt.get(name).get(chair);
 		if(g.eat>=susiCount) {					

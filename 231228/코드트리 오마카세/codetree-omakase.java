@@ -189,6 +189,7 @@ public class Main {
 				if(moveChair<0) {
 					moveChair = L-1;
 				}
+				if(!belt.containsKey(g.name)) break;
 				if(!belt.get(g.name).containsKey(moveChair)) continue;
 				
 				//해당 벨트의 초밥 갯수

@@ -22,8 +22,16 @@ public class Main {
 		
 		@Override
 		public String toString() {
-			// TODO Auto-generated method stub
-			return "["+id+","+"]";
+			//[id-next[id]-prv[id]]
+			int nextId = -1;
+			int prvId = -1;
+			if(this.next!=null) {
+				nextId = this.next.id;
+			}
+			if(this.prv!=null) {
+				prvId = this.prv.id;
+			}
+			return "["+id+"-"+"prv["+prvId+"]"+"next["+nextId+"]"+"]";
 		}
 	}
 	
@@ -80,6 +88,7 @@ public class Main {
 			}else {
 				Present out = this.head;
 				this.head = out.next;
+				this.head.prv = null;
 				
 				out.next = null;
 				out.prv = null;
@@ -110,13 +119,12 @@ public class Main {
 			// TODO Auto-generated method stub
 			
 			StringBuilder sb = new StringBuilder();
-			
 			Present head = this.head;
 			while(head!=null) {
 				sb.append(head.id).append("-");
 				head = head.next;
 			}
-			return sb.append("\n").toString();
+			return sb.toString();
 		}
 	}
 	
@@ -146,7 +154,7 @@ public class Main {
 		
 	}
 
-	private static void move(int src, int dst) {
+	private static int move(int src, int dst) {
 		//src벨트를 모두 dst로 옮김
 		//dst의 벨트에는 src-dst 순으로 생성된다.
 		
@@ -176,10 +184,7 @@ public class Main {
 			dstBelt.cnt += srcBelt.cnt;
 			srcBelt.cnt = 0;
 			
-			System.out.println(dstBelt.cnt);
-			
-			
-			
+			return dstBelt.cnt;
 		}else if(srcBelt.cnt>0) {
 			//src만 존재
 			
@@ -194,11 +199,11 @@ public class Main {
 			srcBelt.cnt = 0;
 
 			
-			System.out.println(dstBelt.cnt);
+			return dstBelt.cnt;
 		}else {
 			//dst만 존재하거나, src,dst둘다 없음
 			
-			System.out.println(dstBelt.cnt);
+			return dstBelt.cnt;
 		}
 		
 		
@@ -206,7 +211,7 @@ public class Main {
 		
 	}
 
-	private static void headMove(int src, int dst) {
+	private static int headMove(int src, int dst) {
 		//앞물건만 교체
 		
 		//src의 앞을 dst의 앞과 교체
@@ -229,13 +234,13 @@ public class Main {
 
 		}
 		
-		System.out.println(dstBelt.cnt);
+		return dstBelt.cnt;
 		
 		
 		
 	}
 
-	private static void split(int src, int dst) {
+	private static int split(int src, int dst) {
 		//src의 앞 절반까지를 dst의 앞으로 이동
 		//dst에는 src절반 - dst 순으로 만들어진다.
 		
@@ -246,8 +251,7 @@ public class Main {
 		
 		//1개인 경우 안옮기고 출력, 0인것도 출력
 		if(srcBelt.cnt<=1) {
-			System.out.println(dstBelt.cnt);
-			return;
+			return dstBelt.cnt;
 		}
 		
 		
@@ -290,11 +294,11 @@ public class Main {
 		srcBelt.cnt-=moveCnt;
 		dstBelt.cnt+=moveCnt;
 		
-		System.out.println(dstBelt.cnt);
+		return dstBelt.cnt;
 		
 	}
 
-	private static void getPresent(int p) {
+	private static int getPresent(int p) {
 		//선물의 앞,뒤 번호 확인
 		
 		//a+2*b를 출력
@@ -311,11 +315,10 @@ public class Main {
 			b = presents[p].next.id;
 		}
 		
-		System.out.println(a+2*b);
-		
+		return (a+(2*b));
 	}
 
-	private static void getBelt(int bid) {
+	private static int getBelt(int bid) {
 		//해당 벨트 맨앞 선물 번호 a
 		//맨뒤 선물을 b로한다.
 		//선물개수를 c로 한다.
@@ -335,24 +338,18 @@ public class Main {
 		
 		int c = belts[bid].cnt;
 		
-		if(bid==1) {
-//			System.out.println("1111");
-//			System.out.println(belts[bid]);
-//			System.out.println("a"+a);
-//			System.out.println("b"+b);
-//			System.out.println("c"+c);
-		}
-		
-		System.out.println(a+(2*b)+(3*c));
+
+		return (a+(2*b)+(3*c));
 		
 	}
 	
 	public static void main(String[] args) throws Exception{
+	
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
 		int Q = Integer.parseInt(st.nextToken());
-
+		int result = 0;
 		for(int q=0;q<Q;q++) {
 			st = new StringTokenizer(br.readLine());
 			
@@ -372,26 +369,42 @@ public class Main {
 				int src = Integer.parseInt(st.nextToken());
 				int dst = Integer.parseInt(st.nextToken());
 				
-				move(src,dst);
+				result = move(src,dst);
+				System.out.println(result);
 			}else if(cmd==300) {
 				int src = Integer.parseInt(st.nextToken());
 				int dst = Integer.parseInt(st.nextToken());
-				headMove(src,dst);
+				result = headMove(src,dst);
+				System.out.println(result);
 			}else if(cmd==400) {
 				int src = Integer.parseInt(st.nextToken());
 				int dst = Integer.parseInt(st.nextToken());
-				split(src,dst);
+				result = split(src,dst);
+				System.out.println(result);
 			}else if(cmd==500) {
 				int p = Integer.parseInt(st.nextToken());
-				getPresent(p);
+				result = getPresent(p);
+				System.out.println(result);
 			}else if(cmd==600) {
 				int b = Integer.parseInt(st.nextToken());
-				getBelt(b);
+				result = getBelt(b);
+				System.out.println(result);
 			}
 			
-			//print();
+
+//			print();
 			
 		}
+	}
+	
+	private static boolean check(int result, int solution) {
+		if(result!=solution) {
+			System.out.println("예측 : "+result);
+			System.out.println("정답 : "+solution);
+			System.out.println("틀림");
+			return false;
+		}
+		return true;
 	}
 
 	private static void print() {
@@ -399,6 +412,7 @@ public class Main {
 		for(int i=1;i<belts.length;i++) {
 			System.out.println(i+":"+belts[i]);
 		}
+		System.out.println(Arrays.toString(presents));
 		System.out.println("----");
 		
 	}

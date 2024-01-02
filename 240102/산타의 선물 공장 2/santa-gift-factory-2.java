@@ -16,6 +16,12 @@ public class Main {
 			super();
 			this.id = id;
 		}
+		
+		@Override
+		public String toString() {
+			// TODO Auto-generated method stub
+			return "["+id+","+"]";
+		}
 	}
 	
 	static class Belt{
@@ -59,13 +65,14 @@ public class Main {
 		//앞에것을 뽑는다.
 		private Present poll() {
 			if(this.cnt==0) return null;
-			this.cnt-=1;
+			
 			
 			if(this.cnt==1) {
 				Present out = this.head;
 				this.head = null;
 				this.tail = null;
 
+				this.cnt-=1;
 				return out;
 			}else {
 				Present out = this.head;
@@ -74,6 +81,7 @@ public class Main {
 				out.next = null;
 				out.prv = null;
 				
+				this.cnt-=1;
 				return out;
 			}
 		}
@@ -223,8 +231,8 @@ public class Main {
 		Belt srcBelt = belts[src];
 		Belt dstBelt = belts[dst];
 		
-		//1개인 경우 안옮기고 출력
-		if(srcBelt.cnt==1) {
+		//1개인 경우 안옮기고 출력, 0인것도 출력
+		if(srcBelt.cnt<=1) {
 			System.out.println(dstBelt.cnt);
 			return;
 		}
@@ -252,7 +260,7 @@ public class Main {
 			
 			dstBelt.tail = srcSplitTail;
 			
-		}else {			
+		}else {
 			Present tmp = srcSplitTail.next;
 			tmp.prv = null;
 			
@@ -358,7 +366,7 @@ public class Main {
 				getBelt(b);
 			}
 			
-//			print();
+			//print();
 			
 		}
 	}

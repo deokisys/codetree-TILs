@@ -20,6 +20,20 @@ public class Main {
 			this.prv = null;
 		}
 		
+		@Override
+		public String toString() {
+			
+			int prv = -1;
+			if(this.prv!=null) {
+				prv = this.prv.id;
+			}
+			int nxt = -1;
+			if(this.next!=null) {
+				nxt = this.next.id;
+			}
+			return "["+id+"/"+this.beltId+":"+prv+","+nxt+"]";
+		}
+		
 	}
 	static class Belt{
 		int id;
@@ -60,15 +74,32 @@ public class Main {
 			Present out = this.head;
 			out.beltId = -1;//하차 처리
 			
-			this.head = this.head.next;
-			if(this.head==null) {
-				//뽑았는데 완전 비었어
+			if(out.id==this.tail.id) {
+				//오직 요소가 하나뿐이었다.
+				this.head = null;
 				this.tail = null;
 			}else {
+				this.head = out.next;
 				this.head.prv = null;
 			}
 			
+			out.next = null;
+			out.prv = null;
+			
 			return out;
+		}
+		
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			
+			Present Head = this.head;
+			while(Head!=null) {
+				sb.append(Head).append("-");
+				Head = Head.next;
+			}
+			sb.append("realTail").append(this.tail);
+			return sb.toString();
 		}
 	}
 	
@@ -162,15 +193,16 @@ public class Main {
 		}else {
 			//head라는 의미
 			//belt의 head를 수정
-			belts[beltIds[outPresent.beltId]].head = outPresent.next;
+			belts[getBeltId(outPresent.beltId)].head = outPresent.next;
 		}
 		if(outPresent.next!=null) {
 			outPresent.next.prv = outPresent.prv;
 		}else {
 			//tail이라는 의미
-			belts[beltIds[outPresent.beltId]].tail = outPresent.prv;
+			belts[getBeltId(outPresent.beltId)].tail = outPresent.prv;
 		}
 		
+		outPresent.beltId = -1;//벨트에서 나옴 처리
 		return r_id;
 	}
 
@@ -188,7 +220,7 @@ public class Main {
 
 		//head - 물건 - 찾는물건 - 뒤물건 - tail
 		
-		int beltId = beltIds[outPresent.beltId];
+		int beltId = getBeltId(outPresent.beltId);
 		
 		if(outPresent.prv!=null) {
 			//head가 아니라는 의미
@@ -196,11 +228,12 @@ public class Main {
 
 			//벨트정보
 			//벨트의 head와 tail을 연결
-			Present head = belts[beltId].head;
-			Present tail = belts[beltId].tail;
+//			System.out.println(belts[beltId].isCrush);
+//			System.out.println(belts[beltId].head);
+//			System.out.println(belts[beltId].tail);
 			
-			head.prv = tail;
-			tail.next = head;
+			belts[beltId].head.prv = belts[beltId].tail;
+			belts[beltId].tail.next = belts[beltId].head;
 			
 			//새로운 헤드 선언
 			belts[beltId].head = outPresent;
@@ -211,6 +244,11 @@ public class Main {
 			//헤드와 꼬리 연결끊기
 			belts[beltId].head.prv = null;
 			belts[beltId].tail.next = null;
+		}else {
+//			System.out.println("상자는 있는데 벨트에 아무것도 없다고?"+beltId);
+//			System.out.println(outPresent);
+//			System.out.println(belts[beltId].head);
+//			System.out.println(belts[beltId].head.next);
 		}
 		
 		
@@ -229,7 +267,7 @@ public class Main {
 		//고장난 벨트 그대로 해당 벨트 뒤에 붙인다.
 		
 		int nextId = b_num;
-		for(int i=1;i<M;i++) {
+		for(int i=1;i<=M;i++) {
 			nextId+=1;
 			if(nextId>M) {
 				nextId = 1;
@@ -263,13 +301,20 @@ public class Main {
 		
 		//벨트 이동 처리
 		belts[b_num].isCrush = true;
+		belts[b_num].head = null;
+		belts[b_num].tail = null;
 		beltIds[b_num] = nextId;
 		return b_num;
 	}
 	
+	private static int getBeltId(int id) {
+		if(beltIds[id]==id) return id;
+		beltIds[id] = getBeltId(beltIds[id]);
+		return beltIds[id];
+	}
+	
 
 	public static void main(String[] args) throws Exception{
-//		BufferedReader solutionBR = new BufferedReader(new FileReader("src/산타의선물공장/output.txt"));
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
@@ -314,14 +359,26 @@ public class Main {
 				System.out.println(result);
 			}
 			
-//			if(cmd!=100) {
-//				if(!check(result,Integer.parseInt(solutionBR.readLine()))) break;				
-//			}
+			if(cmd!=100) {
+//				System.out.println(cmd);
+				//if(!check(result,Integer.parseInt(solutionBR.readLine()))) break;
+				//print();
+			}
 			
 		}
 	}
 	
 
+
+	private static void print() {
+		System.out.println("---");
+		for(int i=1;i<=M;i++) {
+			System.out.println(belts[i]);
+		}
+		System.out.println(Arrays.toString(beltIds));
+		System.out.println("---");
+		
+	}
 
 	private static boolean check(int result, int solution) {
 		if(result!=solution) {

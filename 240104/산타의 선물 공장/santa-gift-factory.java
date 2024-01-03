@@ -314,11 +314,11 @@ public class Main {
 	}
 	
 
-	public static void main(String[] args) throws Exception{
-		
+	public static void main(String[] args) throws Exception{		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
+		StringBuilder sb = new StringBuilder();
 		int Q = Integer.parseInt(st.nextToken());
 		int result = 0;
 		for(int q=0;q<Q;q++) {
@@ -344,28 +344,26 @@ public class Main {
 				int w_max = Integer.parseInt(st.nextToken());
 				
 				result = down(w_max);
-				System.out.println(result);
 			}else if(cmd==300) {
 				int r_id = Integer.parseInt(st.nextToken());
 				result = remove(r_id);
-				System.out.println(result);
 			}else if(cmd==400) {
 				int f_id = Integer.parseInt(st.nextToken());
 				result = confirm(f_id);
-				System.out.println(result);
 			}else if(cmd==500) {
 				int b_num = Integer.parseInt(st.nextToken());
 				result = crush(b_num);
-				System.out.println(result);
 			}
 			
 			if(cmd!=100) {
 //				System.out.println(cmd);
 				//if(!check(result,Integer.parseInt(solutionBR.readLine()))) break;
 				//print();
+				sb.append(result).append("\n");
 			}
 			
 		}
+		System.out.println(sb.toString());
 	}
 	
 

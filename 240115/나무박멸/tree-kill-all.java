@@ -1,8 +1,6 @@
 import java.io.*;
 import java.util.*;
 
-
-
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -23,13 +21,9 @@ public class Main {
     		}
     	}
     	int answer = 0;
-//    	print(map);
     	for(int y=0;y<M;y++) {
-//    		System.out.println(y);
     		map = grow(N,y,map,safeMap);
-//    		print(map);
     		answer+=kill(N,y,K,C,map,safeMap);
-//    		print(map);
     	}
     	
     	System.out.println(answer);
@@ -112,7 +106,15 @@ public class Main {
 					int zc = maxC+dc[d]*step;
 					if(zr<0||zc<0||zr>=N||zc>=N) break;//외곽은 종료
 					//벽이면 종료
-					if(map[zr][zc]<=0) break;
+					if(map[zr][zc]<0) break;
+					
+					
+					if(map[zr][zc]==0) {
+						//빈칸이면 제초제 갱신하고 종료
+						map[zr][zc] = 0;
+						safeMap[zr][zc] = y+C+1;//제초제 갱신
+						break;
+					}
 					map[zr][zc] = 0;
 					safeMap[zr][zc] = y+C+1;//제초제 갱신
 				}
@@ -171,7 +173,8 @@ public class Main {
 				nMap[r][c] = map[r][c]+treeCnt;
 				if(childCnt==0) continue;
 				//번식
-				int child = (int)Math.floor((double)nMap[r][c]/childCnt);
+//				int child = (int)Math.floor((double)nMap[r][c]/childCnt);
+				int child = nMap[r][c]/childCnt;
 				for(int d=0;d<4;d++) {
 					int zr = r+dr[d];
 					int zc = c+dc[d];

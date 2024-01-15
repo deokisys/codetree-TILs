@@ -1,6 +1,8 @@
 import java.io.*;
 import java.util.*;
 
+
+
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -21,7 +23,9 @@ public class Main {
     		}
     	}
     	int answer = 0;
+//    	print(map);
     	for(int y=0;y<M;y++) {
+//    		System.out.println(y);
     		map = grow(N,y,map,safeMap);
 //    		print(map);
     		answer+=kill(N,y,K,C,map,safeMap);
@@ -101,7 +105,7 @@ public class Main {
 		if(maxKill>0) {
 			
 			map[maxR][maxC] = 0;
-			
+			safeMap[maxR][maxC] = y+C+1;//제초제 갱신
 			for(int d=0;d<4;d++) {
 				for(int step=1;step<=K;step++) {
 					int zr = maxR+dr[d]*step;

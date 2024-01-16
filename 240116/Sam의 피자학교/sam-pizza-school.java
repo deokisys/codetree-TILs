@@ -105,7 +105,7 @@ public class Main {
 			if(rollCnt%2==1) {
 				step++;
 			}
-			if(dst[1]+step>=N) break;
+			if(dst[1]+step>N) break;
 			for(int c=0;c<N;c++) {
 				//c를 이동할때 다음 접기가 가능한지 계속 확인한다.
 				for(int r=0;r<N;r++) {

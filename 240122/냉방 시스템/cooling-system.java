@@ -26,8 +26,7 @@ public class Main {
 	static int minAir = Integer.MAX_VALUE;
 	static int N;
 	public static void main(String[] args) throws IOException {
-		
-    	
+		    	
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		
@@ -101,8 +100,9 @@ public class Main {
 		
 		
 		int time = 1;
-		
+//		print2(map);
 		while(true) {
+//			System.out.println("----------------------");
 			if(time>100) {
 				time = -1;
 				break;
@@ -111,11 +111,12 @@ public class Main {
 			
 			blow(air,map,aircons);
 			
-//			print(air);
+			
 			air = mix(air,map);
 			
 //			print(air);
 			down(air);
+//			print(air);
 			check(air,offices);
 			if(minAir>=K) break;
 			time++;
@@ -199,6 +200,7 @@ public class Main {
 	
 		for(int i=0;i<aircons.size();i++) {
 			bfs(air,map,aircons.get(i));
+//			print(air);
 		}
 	}
 	
@@ -266,7 +268,7 @@ public class Main {
 				
 				int downD = (airconDir-1);
 				if(downD<0) {
-					downD = 0;
+					downD = 3;
 				}
 				//-1위치 확인
 				if(checkDirection(cur.r,cur.c,downD,dr,dc,visited,map)) {

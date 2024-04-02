@@ -51,6 +51,8 @@ public class Main {
                 curCount+=1;
             }
             check[data[(jump+k)%n]]+=1;
+
+            answer = Math.max(answer,curCount);
         }
 
 

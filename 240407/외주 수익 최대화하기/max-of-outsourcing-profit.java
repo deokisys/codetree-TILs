@@ -24,9 +24,11 @@ public class Main {
     }
 
     public static void bt(int[][] data, int time, int sum){
-        if(data.length-1<time){
-            maxMoney = Math.max(sum, maxMoney);
+        if(data.length<time){
+            //넘으면 안됨
             return;
+        }else{
+            maxMoney = Math.max(sum, maxMoney);
         }
 
         for(int t=time;t<data.length;t++){

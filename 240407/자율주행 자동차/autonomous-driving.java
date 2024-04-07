@@ -37,7 +37,8 @@ public class Main {
         int[] dc = {0,1,0,-1};
 
         boolean[][] visited = new boolean[map.length][map[0].length];
-        int result = 0;
+        visited[carX][carY] = true;
+        int result = 1;
 
         while(true){
 

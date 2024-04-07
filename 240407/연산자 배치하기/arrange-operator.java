@@ -4,7 +4,7 @@ import java.io.*;
 public class Main {
 
     static int min = Integer.MAX_VALUE;
-    static int max = 0;
+    static int max = Integer.MIN_VALUE;
     public static void main(String[] args) throws Exception{
 
         Scanner sc = new Scanner(System.in);

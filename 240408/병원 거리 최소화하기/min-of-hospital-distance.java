@@ -51,9 +51,41 @@ public class Main {
         }
 
 
-        select(map,people,hospital,0,m);
+        //select(map,people,hospital,0,m);
+        select2(map,people,hospital,0,m,new ArrayList<>());
         System.out.println(minDist);
     }
+    
+
+    static public void select2(int[][] map, ArrayList<Pos> people,ArrayList<Pos> hospital,int idx, int m, ArrayList<Pos> save){
+        
+        if(m==0){
+
+            int totalCnt = 0;
+            for(int p=0;p<people.size();p++){
+                int cnt = 1000;
+                for(int h=0;h<save.size();h++){
+                    int tmp = Math.abs(people.get(p).r-save.get(h).r)+Math.abs(people.get(p).c-save.get(h).c);
+                    cnt = Math.min(tmp,cnt);
+                }
+                totalCnt+=cnt;
+            }
+
+            minDist = Math.min(minDist, totalCnt);
+
+            return;
+        }
+        if(idx==hospital.size()) return;
+
+        for(int i=idx;i<hospital.size();i++){
+            save.add(new Pos(hospital.get(i).r, hospital.get(i).c));
+
+            select2(map,people,hospital,i+1,m-1,save);
+
+            save.remove(save.size()-1);
+        }
+    }
+
     static int minDist = Integer.MAX_VALUE;
     static public void select(int[][] map, ArrayList<Pos> people,ArrayList<Pos> hospital,int idx, int m){
         
@@ -87,6 +119,7 @@ public class Main {
 
         for(int i=0;i<people.size();i++){
             result+=bfs(map,people.get(i));
+            if(minDist< result) return minDist;
         }
 
         return result;

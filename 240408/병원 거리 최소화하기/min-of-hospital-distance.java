@@ -1,3 +1,4 @@
+import java.io.FileInputStream;
 import java.util.*;
 
 public class Main {
@@ -8,7 +9,7 @@ public class Main {
             this.c = c;
         }
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
         
         //n병원크기,m필요한 병원
         //두 거리
@@ -30,6 +31,7 @@ public class Main {
         ArrayList<Pos> people = new ArrayList<>();
         ArrayList<Pos> hospital = new ArrayList<>();
 
+        // System.setIn(new FileInputStream("병원거리/input.txt"));
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
         int m = sc.nextInt();
@@ -54,22 +56,26 @@ public class Main {
     }
     static int minDist = Integer.MAX_VALUE;
     static public void select(int[][] map, ArrayList<Pos> people,ArrayList<Pos> hospital,int idx, int m){
-        if(idx==hospital.size()) return;
+        
         if(m==0){
 
             //갯수 세기
-
+            // System.out.println("-----");
+            // for(int i=0;i<map.length;i++){
+            //     System.out.println(Arrays.toString(map[i]));
+            // }
             int cnt = count(map,people);
 
             minDist = Math.min(minDist, cnt);
 
             return;
         }
+        if(idx==hospital.size()) return;
 
         for(int i=idx;i<hospital.size();i++){
             map[hospital.get(i).r][hospital.get(i).c] = 2;
 
-            select(map,people,hospital,idx+1,m-1);
+            select(map,people,hospital,i+1,m-1);
 
             map[hospital.get(i).r][hospital.get(i).c] = 0;
         }
@@ -87,34 +93,29 @@ public class Main {
     }
 
 
-    private static int bfs(int[][] map, Pos pos) {
+    private static int bfs(int[][] map, Pos start) {
         boolean[][] visited = new boolean[map.length][map[0].length];
         Queue<Pos> que = new ArrayDeque<>();
-        visited[pos.r][pos.c] = true;
-        que.add(new Pos(pos.r,pos.c));
+        visited[start.r][start.c] = true;
+        que.add(new Pos(start.r,start.c));
 
         int[] dr = {-1,1,0,0};
         int[] dc = {0,0,-1,1};
-        int step = 0;
         while(!que.isEmpty()){
-            for(int s=0,size=que.size();s<size;s++){
+            Pos cur = que.poll();
 
-                Pos cur = que.poll();
-
-                if(map[cur.r][cur.c]==2){
-                    return step;
-                }
-
-                for(int d=0;d<4;d++){
-                    int zr = cur.r+dr[d];
-                    int zc = cur.c+dc[d];
-                    if(zr<0||zc<0||zr>=map.length||zc>=map[0].length) continue;
-                    if(visited[zr][zc]) continue;
-                    visited[zr][zc] = true;
-                    que.add(new Pos(zr,zc));
-                }
+            if(map[cur.r][cur.c]==2){
+                return Math.abs(cur.r-start.r)+Math.abs(cur.c-start.c);
             }
-            step++;
+
+            for(int d=0;d<4;d++){
+                int zr = cur.r+dr[d];
+                int zc = cur.c+dc[d];
+                if(zr<0||zc<0||zr>=map.length||zc>=map[0].length) continue;
+                if(visited[zr][zc]) continue;
+                visited[zr][zc] = true;
+                que.add(new Pos(zr,zc));
+            }
         }
 
         return 0;

@@ -23,16 +23,23 @@ public class Main {
 			//에어컨으로 들어가면 사라짐
 		
 		//t초후 먼저의 양은?
-		//System.setIn(new FileInputStream("src/시공의돌풍/input.txt"));
 		Scanner sc = new Scanner(System.in);
 		int n = sc.nextInt();
 		int m = sc.nextInt();
 		
 		int T= sc.nextInt();
 		int[][] map = new int[n][m];
+		
+		int stormR = -1;
+		int stormC = -1;
+		
 		for(int i=0;i<n;i++) {
 			for(int j=0;j<m;j++) {
 				map[i][j] = sc.nextInt();
+				if(stormR==-1 && map[i][j]==-1) {
+					stormR = i;
+					stormC = j;
+				}
 			}
 		}
 		
@@ -43,7 +50,7 @@ public class Main {
 			
 			//print(map);
 			//돌풍
-			storm(map);
+			storm(map,stormR,stormC);
 			
 			//print(map);
 			
@@ -68,12 +75,12 @@ public class Main {
 		}
 		
 	}
-	static void storm(int[][] map){
+	static void storm(int[][] map,int stormR, int stormC){
 		
-		upStorm(map,map.length/2-1);
+		upStorm(map,stormR);
 		
 		
-		downStorm(map,map.length/2);
+		downStorm(map,stormR+1);
 
 
 	}

@@ -16,7 +16,7 @@ public class Main {
 			return sb.toString();
 		}
 	}
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws Exception {
 		//n,m 곰팡이 채취
 		//곰팡이 크기, 속력
 	
@@ -53,10 +53,12 @@ public class Main {
 		
 		
 		//그냥 지도 전체 탐색하자.
-		Scanner sc = new Scanner(System.in);
-		int n = sc.nextInt();
-		int m = sc.nextInt();
-		int k = sc.nextInt();
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		int n = Integer.parseInt(st.nextToken());
+		int m =Integer.parseInt(st.nextToken());
+		int k = Integer.parseInt(st.nextToken());
 		
 		Virus[][] map = new Virus[n][m];
 		
@@ -64,11 +66,12 @@ public class Main {
 		
 		
 		for(int i=0;i<k;i++) {
-			int x = sc.nextInt();
-			int y = sc.nextInt();
-			int s = sc.nextInt();
-			int d = sc.nextInt();
-			int b = sc.nextInt();
+			st = new StringTokenizer(br.readLine());
+			int x = Integer.parseInt(st.nextToken());
+			int y = Integer.parseInt(st.nextToken());
+			int s = Integer.parseInt(st.nextToken());
+			int d = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
 			map[x-1][y-1] = new Virus(s,d-1,b);
 		}
 		

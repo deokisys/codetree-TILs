@@ -74,34 +74,45 @@ public class Main {
 		Queue<Pos> que = new ArrayDeque<>();
 		for(Pos cur : save) {
 			que.add(new Pos(cur.r,cur.c));
+			visited[cur.r][cur.c]= true; 
 		}
 		
 		int[] dr = {-1,1,0,0};
 		int[] dc = {0,0,-1,1};
 		int time = 0;
+//		System.out.println(Arrays.toString(save));
 		while(!que.isEmpty()) {
-			
+//			System.out.println(time);
 			for(int s=0,size=que.size();s<size;s++) {				
 				Pos cur = que.poll();
-				
+//				System.out.println(cur);
 				for(int d=0;d<4;d++) {
 					int zr = cur.r+dr[d];
 					int zc = cur.c+dc[d];
 					if(zr<0||zc<0||zr>=map.length||zc>=map.length) continue;
 					if(visited[zr][zc]) continue;
-					if(map[zr][zc]==1||map[zr][zc]==2) continue;
+					if(map[zr][zc]==1) continue;
 					
+					
+					if(map[zr][zc]==0) {
+						//병원은 지나갈수있지만, 바이러스는 없다
+						checkVirus--;
+					}
 					visited[zr][zc]=true;
-					checkVirus--;
 					que.add(new Pos(zr,zc));
 				}
 			}
-			if(que.isEmpty()) {
+			
+			if(que.isEmpty()) {//더이상 이동 불가면 종료
 				break;
 			}
 			time++;
+			
+			if(checkVirus==0) {//더이상 바이러스가 없으면 종료(병원을 지나가려고 해서 멈춰야함)
+				break;
+			}
 		}
-//		System.out.println(Arrays.toString(save));
+		
 //		System.out.println(time);
 		if(checkVirus==0) {
 			minTime = Math.min(minTime, time);

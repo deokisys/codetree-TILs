@@ -1,3 +1,4 @@
+import java.io.FileInputStream;
 import java.util.*;
 
 
@@ -47,9 +48,17 @@ public class Main {
 			}else {
 				map = col(map);
 			}
+			//print(map);
 			time++;
 		}
 		System.out.println(time);
+	}
+	
+	static void print(int[][] map) {
+		System.out.println("---");
+		for(int i=0;i<h;i++) {
+			System.out.println(Arrays.toString(Arrays.copyOfRange(map[i], 0, w)));
+		}
 	}
 	
 	static int[][] row(int[][] map){
@@ -58,7 +67,7 @@ public class Main {
 			Map<Integer,Integer> check = new HashMap<>();
 			//값 확인
 			for(int j=0;j<w;j++) {
-				if(map[i][j]==0) break;
+				if(map[i][j]==0) continue;
 				if(!check.containsKey(map[i][j])) {
 					check.put(map[i][j], 0);
 				}
@@ -98,7 +107,7 @@ public class Main {
 			Map<Integer,Integer> check = new HashMap<>();
 			//값 확인
 			for(int i=0;i<h;i++) {
-				if(map[i][j]==0) break;
+				if(map[i][j]==0) continue;
 				if(!check.containsKey(map[i][j])) {
 					check.put(map[i][j], 0);
 				}

@@ -83,6 +83,9 @@ public class Main {
 //		System.out.println(Arrays.toString(save));
 		while(!que.isEmpty()) {
 //			System.out.println(time);
+            if(checkVirus==0) {//더이상 바이러스가 없으면 종료(병원을 지나가려고 해서 멈춰야함)
+				break;
+			}
 			for(int s=0,size=que.size();s<size;s++) {				
 				Pos cur = que.poll();
 //				System.out.println(cur);
@@ -108,9 +111,7 @@ public class Main {
 			}
 			time++;
 			
-			if(checkVirus==0) {//더이상 바이러스가 없으면 종료(병원을 지나가려고 해서 멈춰야함)
-				break;
-			}
+			
 		}
 		
 //		System.out.println(time);

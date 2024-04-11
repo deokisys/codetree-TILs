@@ -139,7 +139,7 @@ public class Main{
                         answer += (same.cnt*same.n);
 
                         //새로 넣을것이 이전것과 중복되는 번호인지 확인
-                        if(stack.peek().n==map[r][c]){
+                        if(!stack.isEmpty()&&stack.peek().n==map[r][c]){
                             int tmpCnt = stack.pop().cnt;
                             stack.add(new Node(map[r][c],tmpCnt+1));
                         }else{

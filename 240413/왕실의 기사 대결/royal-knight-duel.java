@@ -100,6 +100,7 @@ public class Main {
             int d = Integer.parseInt(st.nextToken());
             // System.out.println(id+":"+d);
             // print(knightMap);
+            if(knights[id].hp<=0) continue;//체력이 빵이면 그냥 다음으로
             knightMap = move(map,knightMap,id,d);
             // print(knightMap);
             // printHP();

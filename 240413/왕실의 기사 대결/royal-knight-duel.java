@@ -43,6 +43,7 @@ public class Main {
     static class Knight{
         int r,c;
         int hp;
+        int damage;
         Knight(int r,int c, int hp){
             this.r = r;
             this.c = c;
@@ -55,7 +56,7 @@ public class Main {
     static Knight[] knights;
     static int L,N;
     public static void main(String[] args) throws Exception {
-        // System.setIn(new FileInputStream("왕실의기사대결/input.txt"));
+        // System.setIn(new FileInputStream("왕실의기사대결/input2.txt"));
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st  = new StringTokenizer(br.readLine());
@@ -91,13 +92,16 @@ public class Main {
                 }
             }
         }
+        // print(map);
 
         for(int q=0;q<Q;q++){
             st  = new StringTokenizer(br.readLine());
             int id = Integer.parseInt(st.nextToken());
             int d = Integer.parseInt(st.nextToken());
-
-            move(map,knightMap,id,d);
+            // System.out.println(id+":"+d);
+            // print(knightMap);
+            knightMap = move(map,knightMap,id,d);
+            // print(knightMap);
         }
 
 
@@ -105,10 +109,17 @@ public class Main {
         int answer = 0;
         for(int i=1;i<=N;i++){
             if(knights[i].hp>0){
-                answer+=knights[i].hp;
+                answer+=knights[i].damage;
             }
         }
         System.out.println(answer);
+    }
+
+    private static void print(int[][] knightMap) {
+        System.out.println("---");
+        for(int i=0;i<knightMap.length;i++){
+            System.out.println(Arrays.toString(knightMap[i]));
+        }
     }
 
     static class Path{
@@ -127,7 +138,7 @@ public class Main {
             this.c = c;
         }
     }
-    private static void move(int[][] map, int[][] knightMap, int id, int moveD) {
+    private static int[][] move(int[][] map, int[][] knightMap, int id, int moveD) {
         
         
         //bfs를 진행
@@ -152,7 +163,7 @@ public class Main {
                 int zr = cur.r+dr[d];
                 int zc = cur.c+dc[d];
                 if(zr<0||zc<0||zr>=L||zc>=L){
-                    if(d==moveD) return;
+                    if(d==moveD) return knightMap;
                     continue;
                 };
                 if(visited[zr][zc]) continue;
@@ -168,7 +179,7 @@ public class Main {
                 //같은 번호는 아님, 근데 이동방향임
                 if(moveD==d){
                     //더 나아가는 위치
-                    if(map[zr][zc]==2) return;//해당 위치에 벽이 존재한다.
+                    if(map[zr][zc]==2) return knightMap;//해당 위치에 벽이 존재한다.
                     if(knightMap[zr][zc]>0){
 
                         //기사가 존재하는데 체력이 있음
@@ -191,35 +202,40 @@ public class Main {
 
 
         //실제 이동 진행
-        knightMap = move(map,knightMap,moveCheck,moveD,id);
-
+        // System.out.println("이동한다");
+        return move(map,knightMap,moveCheck,moveD,id);
 
     }
     private static int[][] move(int[][] map, int[][] knightMap, boolean[] moveCheck, int moveD,int moveId) {
         int[][] result = new int[L][L];
 
+        
         boolean[] pivotCheck = new boolean[N+1];
+        
         for(int i=0;i<L;i++){
             for(int j=0;j<L;j++){
-                if(knightMap[i][j]>0 && moveCheck[knightMap[i][j]]){
-                    if(!pivotCheck[knightMap[i][j]]){
-                        pivotCheck[knightMap[i][j]] = true;
+                int targetId = knightMap[i][j];
+                if(targetId>0 && moveCheck[targetId]){
+                    if(!pivotCheck[targetId]){
+                        pivotCheck[targetId] = true;
 
                         //기준점 이동
-                        knights[knightMap[i][j]].r+=dr[moveD];
-                        knights[knightMap[i][j]].c+=dc[moveD];
+                        knights[targetId].r+=dr[moveD];
+                        knights[targetId].c+=dc[moveD];
                     }
 
                     int zr = i+dr[moveD];
                     int zc = j+dc[moveD];
-                    result[zr][zc] = knightMap[i][j];
+                    result[zr][zc] = targetId;
                     if(map[zr][zc]==1){
                         //이동 위치에 가시가 존재
                         //체력 -1진행
-                        knights[knightMap[i][j]].hp--;
+                        if(targetId!=moveId){
+                            knights[targetId].hp--;
+                            knights[targetId].damage++;
+                            // System.out.println(targetId+"번 다침"+knights[targetId].hp);
+                        }
                     }   
-                }else{
-                    result[i][j] = knightMap[i][j];
                 }
             }
         }

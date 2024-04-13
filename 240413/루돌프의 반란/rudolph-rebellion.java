@@ -93,7 +93,7 @@ public class Main {
 
     static int N,M,P,C,D;
     public static void main(String[] args) throws Exception{
-        // System.setIn(new FileInputStream("루돌프의반란/input2.txt"));
+        // System.setIn(new FileInputStream("루돌프의반란/input3.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
@@ -172,6 +172,106 @@ public class Main {
             System.out.println(Arrays.toString(map[i]));
         }
     }
+    private static boolean rudolfMove(Rudolf rudolf, int turn) {
+        //가까운 산타 찾기
+        int santaId = 0;
+
+        int santaR = -1;
+        int santaC = -1;
+        int santaDist = Integer.MAX_VALUE;
+        for(int p=1;p<=P;p++){
+            //탈락 산타 넘기기
+            if(santas[p].isOut) continue;
+            int dist = getDist(rudolf.r,rudolf.c,santas[p].r,santas[p].c);
+            if(dist<santaDist){
+                santaId = p;
+                santaR = santas[p].r;
+                santaC = santas[p].c;
+                santaDist = dist;
+            }else if(dist==santaDist){
+                //r좌표 큰것으로
+                if(santaR<santas[p].r){
+                    santaId = p;
+                    santaR = santas[p].r;
+                    santaC = santas[p].c;
+                }else if(santaR==santas[p].r){
+                    //c가 큰것으로
+                    if(santaC<santas[p].c){
+                        santaId = p;
+                        santaR = santas[p].r;
+                        santaC = santas[p].c;
+                    }
+                }
+            }
+        }
+
+        //이동 가능한 산타가 없음 = 종료
+        if(santaId==0) return false;
+
+        //8방향에서 santaDist보다 낮아지는 위치로 돌진한다.
+        int[] dr = {-1,-1,-1,0,1,1,1,0};
+        int[] dc = {-1,0,1,1,1,0,-1,-1};
+
+        int moveD = -1;
+        int moveR = -1;
+        int moveC = -1;
+        for(int d =0 ;d<8;d++){
+            int zr = rudolf.r+dr[d];
+            int zc = rudolf.c+dc[d];
+            if(zr<0||zc<0||zr>=N||zc>=N) continue;
+            int dist =  getDist(zr,zc,santas[santaId].r,santas[santaId].c);
+            if(dist<santaDist){
+                santaDist = dist;
+                moveD = d;
+                moveR = zr;
+                moveC = zc;
+            }
+        }
+
+        //moveD를 향해 돌진
+        rudolf.r = moveR;
+        rudolf.c = moveC;
+
+        //충돌 확인
+        if(map[rudolf.r][rudolf.c]>0){
+            // System.out.println("루돌프 이동 충돌"+map[rudolf.r][rudolf.c]);
+            //충돌됬다!
+            int santaP = map[rudolf.r][rudolf.c];
+            //해당 산타 점수 획득
+            santas[santaP].point+=C;
+
+            //산타를 루돌프 이동 방향으로 점프시킨다.
+                //C만큼 점프
+            int zr = santas[santaP].r+dr[moveD]*C;
+            int zc = santas[santaP].c+dc[moveD]*C;
+
+            if(zr<0||zc<0||zr>=N||zc>=N){
+                //탈락
+                map[rudolf.r][rudolf.c] = 0;
+                santas[santaP].isOut = true;
+            }else{
+                //기절 처리
+                // System.out.println(santaP+"번 기절함"+turn);
+                santas[santaP].isStun = true;
+                santas[santaP].stunTurn = turn;
+
+                map[santas[santaP].r][santas[santaP].c] = 0;
+                //이동처리
+                santas[santaP].r = zr;
+                santas[santaP].c = zc;
+
+                //비어있으면 그냥 이동하고 끝
+                if(map[zr][zc]==0){
+                    map[zr][zc] = santaP;
+                }else{
+                    //해당 산타번호가 zr,zc로 이동한다는 뜻
+                    collision(santaP,zr,zc,moveD);
+                }
+            }
+        }
+
+        return true;
+    }
     private static void santaMove(Rudolf rudolf, Santa santa, int turn) {
         //산타 이동
         int[] dr = {-1,-1,-1,0,1,1,1,0};
@@ -235,104 +335,7 @@ public class Main {
         }
 
     }
-    private static boolean rudolfMove(Rudolf rudolf, int turn) {
-        //가까운 산타 찾기
-        int santaId = 0;
-
-        int santaR = -1;
-        int santaC = -1;
-        int santaDist = Integer.MAX_VALUE;
-        for(int p=1;p<=P;p++){
-            //탈락 산타 넘기기
-            if(santas[p].isOut) continue;
-            int dist = getDist(rudolf.r,rudolf.c,santas[p].r,santas[p].c);
-            if(dist<santaDist){
-                santaId = p;
-                santaR = santas[p].r;
-                santaC = santas[p].c;
-                santaDist = dist;
-            }else if(dist==santaDist){
-                //r좌표 큰것으로
-                if(santaR<santas[p].r){
-                    santaId = p;
-                    santaR = santas[p].r;
-                    santaC = santas[p].c;
-                }else if(santaR==santas[p].r){
-                    //c가 큰것으로
-                    if(santaC<santas[p].c){
-                        santaId = p;
-                        santaR = santas[p].r;
-                        santaC = santas[p].c;
-                    }
-                }
-            }
-        }
-
-        //이동 가능한 산타가 없음 = 종료
-        if(santaId==0) return false;
-
-        //8방향에서 santaDist보다 낮아지는 위치로 돌진한다.
-        int[] dr = {-1,-1,-1,0,1,1,1,0};
-        int[] dc = {-1,0,1,1,1,0,-1,-1};
-
-        int moveD = -1;
-        int moveR = -1;
-        int moveC = -1;
-        for(int d =0 ;d<8;d++){
-            int zr = rudolf.r+dr[d];
-            int zc = rudolf.c+dc[d];
-            if(zr<0||zc<0||zr>=N||zc>=N) continue;
-            int dist =  getDist(zr,zc,santas[santaId].r,santas[santaId].c);
-            if(dist<santaDist){
-                santaDist = dist;
-                moveD = d;
-                moveR = zr;
-                moveC = zc;
-            }
-        }
-
-        //moveD를 향해 돌진
-        rudolf.r = moveR;
-        rudolf.c = moveC;
-
-        //충돌 확인
-        if(map[rudolf.r][rudolf.c]>0){
-            //충돌됬다!
-            int santaP = map[rudolf.r][rudolf.c];
-            //해당 산타 점수 획득
-            santas[santaP].point+=C;
-
-            //산타를 루돌프 이동 방향으로 점프시킨다.
-                //C만큼 점프
-            int zr = santas[santaP].r+dr[moveD]*C;
-            int zc = santas[santaP].c+dc[moveD]*C;
-
-            if(zr<0||zc<0||zr>=N||zc>=N){
-                //탈락
-                santas[santaP].isOut = true;
-            }else{
-                //기절 처리
-                // System.out.println(santaP+"번 기절함"+turn);
-                santas[santaP].isStun = true;
-                santas[santaP].stunTurn = turn;
-
-                map[santas[santaP].r][santas[santaP].c] = 0;
-                //이동처리
-                santas[santaP].r = zr;
-                santas[santaP].c = zc;
-
-                //비어있으면 그냥 이동하고 끝
-                if(map[zr][zc]==0){
-                    map[zr][zc] = santaP;
-                }else{
-                    //해당 산타번호가 zr,zc로 이동한다는 뜻
-                    collision(santaP,zr,zc,moveD);
-                }
-            }
-        }
-
-        return true;
-    }
+    
 
     
     private static void collision(int santaP, int zr, int zc,int moveD) {

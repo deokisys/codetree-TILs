@@ -250,6 +250,10 @@ public class Main {
         on(c2);
     }
     private static void printCount(int c) {
-        System.out.println(rooms[c].alert);
+        if(c<1){
+            System.out.println(-1);
+        }else{
+            System.out.println(rooms[c].alert);
+        }
     }
 }

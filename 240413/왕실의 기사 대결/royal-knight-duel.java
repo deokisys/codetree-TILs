@@ -56,7 +56,7 @@ public class Main {
     static Knight[] knights;
     static int L,N;
     public static void main(String[] args) throws Exception {
-        // System.setIn(new FileInputStream("왕실의기사대결/input2.txt"));
+        // System.setIn(new FileInputStream("왕실의기사대결/input3.txt"));
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st  = new StringTokenizer(br.readLine());
@@ -102,6 +102,8 @@ public class Main {
             // print(knightMap);
             knightMap = move(map,knightMap,id,d);
             // print(knightMap);
+            // printHP();
+            // System.out.println("----");
         }
 
 
@@ -155,6 +157,7 @@ public class Main {
         que.add(new Pos(knights[id].r,knights[id].c));
 
         boolean[] moveCheck = new boolean[N+1];
+        moveCheck[id] = true;
 
         while(!que.isEmpty()){
             Pos cur = que.poll();
@@ -203,10 +206,19 @@ public class Main {
 
         //실제 이동 진행
         // System.out.println("이동한다");
-        return move(map,knightMap,moveCheck,moveD,id);
+        return moveMap(map,knightMap,moveCheck,moveD,id);
 
     }
-    private static int[][] move(int[][] map, int[][] knightMap, boolean[] moveCheck, int moveD,int moveId) {
+
+    
+    private static void printHP() {
+        System.out.println("체력확인");
+        for(int i=1;i<=N;i++){
+            System.out.println(i+"-"+knights[i].hp);
+        }
+    }
+
+    private static int[][] moveMap(int[][] map, int[][] knightMap, boolean[] moveCheck, int moveD,int moveId) {
         int[][] result = new int[L][L];
 
         
@@ -231,11 +243,15 @@ public class Main {
                         //이동 위치에 가시가 존재
                         //체력 -1진행
                         if(targetId!=moveId){
-                            knights[targetId].hp--;
-                            knights[targetId].damage++;
+                            if(knights[targetId].hp>0){
+                                knights[targetId].hp--;
+                                knights[targetId].damage++;
+                            }
                             // System.out.println(targetId+"번 다침"+knights[targetId].hp);
                         }
                     }   
+                }else if(targetId>0 && knights[targetId].hp>0){
+                    result[i][j] = targetId;
                 }
             }
         }

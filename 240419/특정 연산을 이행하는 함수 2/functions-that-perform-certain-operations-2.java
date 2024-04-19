@@ -5,27 +5,18 @@ public class Main {
         
         Scanner sc = new Scanner(System.in);
 
-        double a = sc.nextDouble();
-        double b = sc.nextDouble();
-        double c = sc.nextDouble();
+        double[] data = new double[3];
+        data[0] = sc.nextDouble();
+        data[1] = sc.nextDouble();
+        data[2] = sc.nextDouble();
 
-        int aInt = check(a,b,c);
-        int bInt = check(b,a,c);
-        int cInt = check(c,a,b);
+        Arrays.sort(data);
 
-        System.out.println(aInt+" "+bInt+" "+cInt+"    ");
-    }
+        int min = (int)Math.floor(data[0]);
+        int max = (int)Math.ceil(data[2]);
+        int mid = (int)Math.round(data[1]);
+        
 
-    public static int check(double a, double b, double c){
-        if(a>b&&a>c){
-            return (int)Math.ceil(a);
-        }
-
-        if(a<b&&a<c){
-            return (int)Math.floor(a);
-        }
-
-
-        return (int)Math.round(a);
+        System.out.println(max+" "+min+" "+mid+"    ");
     }
 }

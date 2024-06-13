@@ -187,6 +187,7 @@ public class Main {
 		
 		for(int i=0;i<N;i++) {
 			for(int j=0;j<M;j++) {
+                if(pan[i][j]==0) continue;
 				if(pan[i][j]>avg) {					
 					pan[i][j]-=1;
 				}else if(pan[i][j]<avg) {

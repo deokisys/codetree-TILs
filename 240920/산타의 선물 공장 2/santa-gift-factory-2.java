@@ -189,11 +189,11 @@ public class Main {
 		Gift dstHead = belts[mDst].popHead();
 		
 		if(srcHead!=null) {			
-			belts[mDst].addTail(srcHead);
+			belts[mDst].addHead(srcHead);
 		}
 		
 		if(dstHead!=null) {
-			belts[mSrc].addTail(dstHead);
+			belts[mSrc].addHead(dstHead);
 		}
 		
 		

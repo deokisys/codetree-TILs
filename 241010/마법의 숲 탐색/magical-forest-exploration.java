@@ -24,7 +24,6 @@ public class Main {
 	static int R, C;
 	public static void main(String[] args) throws Exception{
 		
-		System.setIn(new FileInputStream("src/마법의숲/input2.txt"));
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
